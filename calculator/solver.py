@@ -11,7 +11,6 @@ def solve_quadratic(a, b, c):
         return root1, root2
 
 def solve_cubic(a, b, c, d):
-    # 간단한 Cardano 방식 (실근 위주)
     f = ((3*c/a) - ((b**2)/(a**2)))/3
     g = ((2*(b**3)/(a**3)) - (9*b*c)/(a**2) + (27*d/a))/27
     h = (g**2)/4 + (f**3)/27
