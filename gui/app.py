@@ -8,12 +8,12 @@ class SciCalcApp:
     def __init__(self, root):
         self.root = root
         self.root.title("SciCalc")
-        self.shift = False
+        self.shift = False  # Shift mode toggle
 
         self.display = tk.Entry(root, width=35, font=("Arial", 18), bd=5, justify='right')
         self.display.grid(row=0, column=0, columnspan=6, padx=10, pady=10)
 
-        self.shift_buttons = {}
+        self.shift_buttons = {}  # Buttons affected by shift mode
         self.create_buttons()
 
     def add_to_display(self, value):
@@ -33,6 +33,7 @@ class SciCalcApp:
         self.update_shift_buttons()
 
     def update_shift_buttons(self):
+        # Update button labels and values based on shift state
         if self.shift:
             self.set_shift("cos", "acos(", "cos")
             self.set_shift("sin", "asin(", "sin")
@@ -53,11 +54,13 @@ class SciCalcApp:
             self.set_shift("!", "fact(", "fact")
 
     def set_shift(self, key, new_text, value):
+        # Modify text and command of shiftable buttons
         btn = self.shift_buttons.get(key)
         if btn:
             btn.config(text=new_text, command=lambda: self.add_to_display(value + "(" if value.isalpha() else value))
 
     def solve_equation(self):
+        # Handle quadratic or cubic equation solving
         choice = simpledialog.askstring("Equation Solver", "Type: quad or cubic")
         if choice == "quad":
             a = float(simpledialog.askstring("Quadratic", "a:"))
@@ -76,6 +79,7 @@ class SciCalcApp:
         self.add_to_display(str(result))
 
     def create_buttons(self):
+        # Button layout: label, row, column
         btn_data = [
             ('7',1,0),('8',1,1),('9',1,2),('/',1,3),('(',1,4),(')',1,5),
             ('4',2,0),('5',2,1),('6',2,2),('*',2,3),('π',2,4),('e',2,5),
@@ -86,6 +90,7 @@ class SciCalcApp:
         ]
 
         for (text, row, col) in btn_data:
+            # Define button command
             if text == "=":
                 cmd = self.evaluate
             elif text == "Clear":
@@ -96,7 +101,7 @@ class SciCalcApp:
                 cmd = self.solve_equation
             else:
                 val = text
-                if text in ["π"]:
+                if text == "π":
                     val = "pi"
                 elif text == "x2":
                     val = "x2("
@@ -110,8 +115,10 @@ class SciCalcApp:
                     val = text + "("
                 cmd = lambda v=val: self.add_to_display(v)
 
+            # Create and place button
             btn = tk.Button(self.root, text=text, width=6, height=2, font=("Arial", 14), command=cmd)
             btn.grid(row=row, column=col, padx=3, pady=3)
 
+            # Track buttons that change in shift mode
             if text in ["cos", "sin", "tan", "π", "log", "x2", "√", "!"]:
                 self.shift_buttons[text] = btn
